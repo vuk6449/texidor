@@ -1,0 +1,6 @@
+{
+  "name": "Texidor",
+  "description": "Sleek, powerful text, code, and PDF editor with on-device compilers, NASM x86-64 assembler, virtual CPU emulation, SQLite runner, syntax highlighting, and IntelliSense.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
