@@ -1,0 +1,97 @@
+name: Build & Publish Release APKs
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Release Tag Name (e.g. v1.0.0)'
+        required: false
+        default: 'v1.0.0'
+
+permissions:
+  contents: write
+
+jobs:
+  build-apks:
+    name: Build & Package Android APKs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Make Build Scripts Executable
+        run: |
+          chmod +x ./build.sh || true
+
+      - name: Build ARM Release APK (Phones)
+        run: |
+          bash ./build.sh --arm --release
+
+      - name: Build Universal Release APK
+        run: |
+          bash ./build.sh --uni --release
+
+      - name: Build x86-64 Release APK (Emulators / ChromeOS)
+        run: |
+          bash ./build.sh --x86 --release
+
+      - name: Verify Built APKs
+        run: |
+          ls -lh build-outputs/
+
+      - name: Create GitHub Release & Upload APKs
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+        with:
+          tag_name: ${{ github.event.inputs.tag_name || github.ref_name }}
+          name: "Texidor Release ${{ github.event.inputs.tag_name || github.ref_name }}"
+          draft: false
+          prerelease: false
+          body: |
+            ### 📱 Texidor Android IDE Release
+            
+            Welcome to the latest release of **Texidor IDE**!
+            
+            #### 📦 Download APKs
+            - **`texidor-release-arm.apk`** — For Android smartphones and handhelds (`arm64-v8a` / `armeabi-v7a`). **Recommended for phones**.
+            - **`texidor-release-uni.apk`** — Universal build compatible with all Android devices (API 24+).
+            - **`texidor-release-x86.apk`** — For ChromeOS, Intel/AMD Android tablets, and emulators.
+            
+            #### ✨ Highlights
+            - 🤖 **Claude Custom Connector**: Real-time Model Context Protocol (MCP) server on port 8080 connecting Claude to your projects, recent files, and terminal.
+            - 🤖 **GitHub Copilot**: Inline autocomplete and multi-file context completions.
+            - 🐧 **Ubuntu 24.04 LTS Termux Shell**: Integrated shell with simulated `apt` package manager and preinstalled coreutils.
+            - 📜 **Shell, Batch & Make**: Syntax highlighting, execution engine, and Makefile parsing.
+            - 🌐 **Web Preview & TypeScript**: Real-time HTML/CSS/JS preview and on-device TS compilation.
+            - 🕒 **Recents Tab**: Quick file switching ordered by modification timestamp.
+            - 💾 **Auto-Save**: Background periodic persistence backed by Room database.
+            
+            #### 📲 Installation on Android
+            1. Download `texidor-release-arm.apk` directly on your phone.
+            2. Tap the downloaded file in your notifications or Files app.
+            3. If prompted, allow "Install unknown apps" for your browser or file manager.
+            4. Tap **Install** and open **Texidor**!
+          files: |
+            build-outputs/texidor-release-arm.apk
+            build-outputs/texidor-release-uni.apk
+            build-outputs/texidor-release-x86.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

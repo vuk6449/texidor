@@ -19,9 +19,14 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import com.example.ui.components.SleekIdeHeaderBar
@@ -104,6 +109,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        applyNavigationBarVisibility(true)
 
         setContent {
             val preferences by viewModel.preferences.collectAsState()
@@ -111,10 +117,45 @@ class MainActivity : ComponentActivity() {
                 ThemeRegistry.getTheme(preferences.theme)
             }
 
+            // Reactively update system navigation bar (III O <) visibility based on user preference
+            LaunchedEffect(preferences.hideNavigationBar) {
+                applyNavigationBarVisibility(preferences.hideNavigationBar)
+            }
+
             OmniEditApp(
                 viewModel = viewModel,
                 themeColors = themeColors
             )
+        }
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus && viewModel.preferences.value.hideNavigationBar) {
+            applyNavigationBarVisibility(true)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (viewModel.preferences.value.hideNavigationBar) {
+            applyNavigationBarVisibility(true)
+        }
+    }
+
+    /**
+     * Hides the system navigation bar ("III O <" 3-button bar or gesture pill) in immersive sticky mode.
+     * When hidden, the entire bottom screen is available for IDE tools without obstruction.
+     * Swiping up from the bottom edge transiently reveals the system bar when needed.
+     */
+    private fun applyNavigationBarVisibility(hide: Boolean) {
+        val insetsController = WindowCompat.getInsetsController(window, window.decorView)
+        insetsController.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        if (hide) {
+            insetsController.hide(WindowInsetsCompat.Type.navigationBars())
+        } else {
+            insetsController.show(WindowInsetsCompat.Type.navigationBars())
         }
     }
 }
@@ -473,6 +514,7 @@ fun OmniEditApp(
                 onToggleLineNumbers = { viewModel.toggleLineNumbers() },
                 onToggleWordWrap = { viewModel.toggleWordWrap() },
                 onToggleAutoSave = { viewModel.toggleAutoSave() },
+                onToggleHideNavigationBar = { viewModel.toggleHideNavigationBar() },
                 onDismiss = { viewModel.setThemeDialogVisible(false) }
             )
         }
@@ -578,6 +620,8 @@ private fun EditorScaffoldContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .navigationBarsPadding()
+                .imePadding()
         ) {
             // Sleek, compact IDE header bar (replaces default Android TopAppBar)
             SleekIdeHeaderBar(

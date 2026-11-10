@@ -912,6 +912,12 @@ class EditorViewModel(application: Application) : AndroidViewModel(application) 
         showSnackbar(if (newState) "Auto-save enabled (every 3s)" else "Auto-save disabled")
     }
 
+    fun toggleHideNavigationBar() {
+        val newState = !_preferences.value.hideNavigationBar
+        _preferences.value = _preferences.value.copy(hideNavigationBar = newState)
+        showSnackbar(if (newState) "Navigation bar hidden (swipe up from bottom to reveal)" else "Navigation bar visible")
+    }
+
     fun setLanguage(languageId: String) {
         val doc = _currentDocument.value ?: return
         val updated = doc.copy(language = languageId)

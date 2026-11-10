@@ -16,39 +16,24 @@ This APK is the official, signed **Release** build compiled specifically for **A
 
 ---
 
-### 🌟 New: Claude Custom Connector (Input Link / MCP Server)
+### 🛡️ Navigation Bar Fix (`III O <` 3-Button Mode Unblocked)
 
-Texidor now includes an **embedded Claude Custom Connector Server** running directly inside the app:
+- **Automatic Immersive Hiding**: The traditional 3-button Android navigation bar (`III O <` — Recents, Home, Back) is automatically hidden in sticky immersive mode (`BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE`).
+- **Unblocked Bottom Tools**: The bottom coding accessory bar, terminal input prompt, AI assistant prompt, and console sheets now have 100% unobstructed screen space.
+- **Swipe-to-Reveal**: Whenever you need the system navigation buttons, swipe up from the bottom edge to transiently reveal them. They automatically slide away after a couple of seconds.
+- **Dynamic Inset Safety**: If the buttons are transiently shown, the layout uses dynamic `navigationBarsPadding()` and `imePadding()` so elements never get covered.
+- **Toggle Setting**: A toggle labeled **"Hide Navigation Bar (III O <)"** is available in **Themes & Editor Preferences** (palette icon) to customize this behavior anytime.
 
-#### 1. ⚡ Input Link for Claude (Model Context Protocol)
-- **Embedded MCP Server**: Runs an HTTP & Server-Sent Events (SSE) server on port `8080` (with cleartext traffic allowed and CORS enabled).
-- **Copyable Connector Link**:
-  - `http://<LAN_IP>:8080/mcp`
-  - `http://localhost:8080/mcp` (loopback / ADB reverse)
-  - `http://<LAN_IP>:8080/sse` (SSE streaming transport)
-- **One-Tap Copy**: Tap **"Claude Link"** in the AI panel to copy the link directly to your clipboard and paste it into Claude's connector prompt.
+---
 
-#### 2. 🔌 Claude Desktop & Claude.ai Integration
-- **Claude.ai**: Add a custom integration/connector using the generated input link.
-- **Claude Desktop**: Paste this directly into `claude_desktop_config.json`:
-  ```json
-  {
-    "mcpServers": {
-      "texidor": {
-        "url": "http://<YOUR_DEVICE_IP>:8080/mcp"
-      }
-    }
-  }
-  ```
-
-#### 3. 🛠️ Capabilities Claude Obtains via the Connector
-- `list_projects`: Inspect all workspaces and projects inside Texidor.
-- `get_project_tree`: Traverse folder trees and directories.
-- `list_recent_files`: Access all recently edited and opened documents with timestamps.
-- `get_active_document`: Read the currently open document in the editor with syntax, line count, and full source code.
-- `read_file` & `write_file`: Read any file in workspace or write updates straight into Texidor.
-- `execute_terminal_command`: Execute shell commands inside the integrated Ubuntu 24.04 Termux environment (`apt`, `make`, `python3`, `gcc`).
-- **Live Activity Log**: Displays all incoming requests from Claude in real-time.
+### 🌟 All Core Features Included
+- 🤖 **Claude Custom Connector**: Real-time Model Context Protocol (MCP) server running on port 8080.
+- 🤖 **GitHub Copilot**: Context-aware coding suggestions and dual assistant panel.
+- 🐧 **Ubuntu 24.04 LTS Termux Shell**: Integrated terminal with `apt` package manager and preinstalled coreutils.
+- 📜 **Shell, Batch & Make**: Syntax highlighting and script execution.
+- 🌐 **Web Preview & TypeScript**: Real-time HTML/CSS/JS preview and on-device TS compilation.
+- 🕒 **Recents Tab**: Instant switching between recently edited documents.
+- 💾 **Auto-Save**: Periodic background saving to SQLite/Room database every 3 seconds.
 
 ---
 

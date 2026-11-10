@@ -53,6 +53,7 @@ fun ThemeSelectorDialog(
     onToggleLineNumbers: () -> Unit,
     onToggleWordWrap: () -> Unit,
     onToggleAutoSave: () -> Unit,
+    onToggleHideNavigationBar: () -> Unit = {},
     onDismiss: () -> Unit
 ) {
     AlertDialog(
@@ -239,6 +240,36 @@ fun ThemeSelectorDialog(
                             checkedTrackColor = currentThemeColors.surfaceVariant
                         ),
                         modifier = Modifier.testTag("auto_save_toggle")
+                    )
+                }
+
+                // Hide Navigation Bar (III O <) toggle
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Hide Navigation Bar (III O <)",
+                            color = currentThemeColors.textColor,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            text = "Hides 3-button bar to unblock tools; swipe up to reveal",
+                            color = currentThemeColors.gutterTextColor,
+                            fontSize = 10.sp
+                        )
+                    }
+                    Switch(
+                        checked = preferences.hideNavigationBar,
+                        onCheckedChange = { onToggleHideNavigationBar() },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = currentThemeColors.primary,
+                            checkedTrackColor = currentThemeColors.surfaceVariant
+                        ),
+                        modifier = Modifier.testTag("hide_nav_bar_toggle")
                     )
                 }
             }

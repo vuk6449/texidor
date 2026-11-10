@@ -1,6 +1,6 @@
 # 🚀 Texidor — Release APKs & Build System
 
-All 3 official **Release APKs** have been compiled and signed with the release key. They are ready for deployment in `./build-outputs/`:
+All 3 official **Release APKs** have been compiled, signed, and updated in `./build-outputs/`:
 
 ### 📦 Release APK Artifacts
 
@@ -12,18 +12,12 @@ All 3 official **Release APKs** have been compiled and signed with the release k
 
 ---
 
-### ⚡ Claude Custom Connector (Input Link & MCP)
+### 🛡️ 3-Button Navigation Bar Auto-Hiding (`III O <`)
 
-Texidor includes a built-in **Claude Custom Connector Server** implementing Anthropic's **Model Context Protocol (MCP)**:
-
-1. **Connector Input Link**:
-   - `http://<LAN_IP>:8080/mcp`
-   - `http://localhost:8080/mcp`
-2. **Features**:
-   - Copyable connector link directly inside the app under the **Claude Link** tab.
-   - Ready-to-copy Claude Desktop JSON configuration.
-   - Claude can list projects, inspect directory trees, view recently edited files, read/write active editor buffers, and run commands in the integrated Ubuntu/Termux shell.
-   - Real-time activity log showing every tool called by Claude.
+- **Eliminates Bottom Screen Overlap**: The traditional Android navigation bar (`III O <`) is hidden in sticky immersive mode so it no longer obstructs the coding accessory bar, terminal command line, AI chat input, or bottom sheet controls.
+- **Swipe-to-Reveal**: Swipe up from the bottom edge to temporarily show the system buttons.
+- **Dynamic Inset Padding**: When the buttons or keyboard appear, layout contents dynamically shift up using `navigationBarsPadding()` and `imePadding()`.
+- **Preference Toggle**: Can be toggled on/off under **Themes & Editor Preferences** → **"Hide Navigation Bar (III O <)"**.
 
 ---
 

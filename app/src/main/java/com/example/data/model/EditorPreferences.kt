@@ -20,5 +20,6 @@ data class EditorPreferences(
     val autoCloseBrackets: Boolean = true,
     val isOledBlack: Boolean = true,
     val fontFamilyName: String = "Monospace", // "Monospace", "SansSerif", "Serif"
-    val autoSaveEnabled: Boolean = true
+    val autoSaveEnabled: Boolean = true,
+    val hideNavigationBar: Boolean = true
 )
