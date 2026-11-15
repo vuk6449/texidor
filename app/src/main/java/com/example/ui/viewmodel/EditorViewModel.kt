@@ -1085,7 +1085,7 @@ class EditorViewModel(application: Application) : AndroidViewModel(application) 
 
         viewModelScope.launch {
             try {
-                val result = LanguageExecutor.execute(code, lang)
+                val result = LanguageExecutor.execute(getApplication(), code, lang)
                 _executionResult.value = result
             } catch (e: Exception) {
                 _executionResult.value = ExecutionResult(

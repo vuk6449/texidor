@@ -41,9 +41,11 @@ googleServices = "4.5.0"
 credentials = "1.5.0"
 googleid = "1.1.1"
 documentfile = "1.0.1"
+bsh = "2.0b6"
 
 
 [libraries]
+beanshell = { group = "org.apache-extras.beanshell", name = "bsh", version.ref = "bsh" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-documentfile = { group = "androidx.documentfile", name = "documentfile", version.ref = "documentfile" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
